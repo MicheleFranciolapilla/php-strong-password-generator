@@ -13,8 +13,59 @@ Gestire ulteriori parametri per la password: quali caratteri usare fra numeri, l
 Dare all’utente anche la possibilità di permettere o meno la ripetizione di caratteri uguali. -->
 
 <?php
+    // Array con valori booleani indicanti le categorie di caratteri (sub array in $char_set_array) da utilizzare per la composizione della password
+    $parameters = [
+        "letters" => false,
+        "numbers" => false,
+        "symbols" => true
+    ];
+
+    // $letters = true;
+    // $numbers = true;
+    // $symbols = true;
+
+    // Array multidimensionale con tre sotto-array contenenti, nel complesso, la totalità dei caratteri validi per la composizione della password
+    $char_set_array = [
+        ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
+        ['0','1','2','3','4','5','6','7','8','9'],
+        ['!','?','#','$','%','&','@']
+    ];
+
+    function create_valid_char_array($parameters, $char_set_array)
+    {
+        $final_array = [];
+        $keys = array_keys($parameters);
+        for ($i = 0; $i < count($parameters); $i++)
+        {
+            if ($parameters[$keys[$i]])
+            {
+                foreach($char_set_array[$i] as $char)
+                {
+                    $final_array[] = $char;
+                }
+            }
+        }
+        return $final_array;
+    }
+
+    $valid_char_array = create_valid_char_array($parameters, $char_set_array);
+    var_dump("Array appena generato: ",$valid_char_array);
+
+    function generate_psw($password_length)
+    {
+        $psw_array = [];
+        var_dump("Array vuoto: ",$psw_array);
+        for ($i = 0; $i < $password_length; $i++)
+        {
+        }
+    };
+
+
     if (isset($_GET['psw_length']))
+    {
         $psw_length = $_GET['psw_length'];
+        $password = generate_psw($psw_length);
+    }
     var_dump("password length = ", $psw_length);
 ?>
 
