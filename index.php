@@ -27,8 +27,21 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
         $parameters['symbols'] = (isset($_GET['allow_symbols']));
         // Creazione effettiva dell'array con i caratteri validi per la generazione della password
         $valid_char_array = create_valid_char_array($parameters, $char_set_array);
-        $password = generate_psw($psw_length, $valid_char_array, $char_set_array["letters"], $allow_repeated);
-        var_dump($valid_char_array);
+        $count = count($valid_char_array);
+        if ($count == 0)
+            $some_error = 2;
+        else
+        {   if ((!$allow_repeated) && ($count < $psw_length))
+            {
+                $some_error = 1;
+                $password = generate_psw($count, $valid_char_array, $char_set_array["letters"], $allow_repeated);
+            }
+            else
+            {
+                $some_error = 0;
+                $password = generate_psw($psw_length, $valid_char_array, $char_set_array["letters"], $allow_repeated);
+            }
+        }
     }
 ?>
 
@@ -67,6 +80,17 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
         <h1 class="text-center text-primary">Strong Password Generator</h1>
     </header>
     <main>
+        <?php
+            if ($some_error >= 0) :
+        ?>
+        <section id="error_manager" class="mt-3 text-center rounded-3 py-2 bg-info">
+            <?php 
+                echo "<h4>" . $error_msgs[$some_error] . "</h4>";
+            ?>
+        </section>
+        <?php
+            endif;
+        ?>
         <section id="form_section" class="mt-5">
             <form action="index.php" method="GET" class="d-flex flex-column rounded-3 py-5 bg-light">
 
@@ -136,7 +160,7 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
             </form>
         </section>
         <?php
-            if (isset($_GET['psw_length'])) :
+            if (isset($_GET['psw_length']) && ($some_error < 2)) :
         ?>
         <section id="output_section" class="my-2 text-center rounded-3 py-5 bg-light">
             <?php
@@ -153,25 +177,6 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
-<!-- <script>
-    function set_bool_value(element)
-    {
-        (element.checked) ? (element.setAttribute("value","true")) : (element.setAttribute("value","false"));
-    }
 
-    function check_submit()
-    {
-        let radio_yes = document.querySelector("#repeated_yes");
-        set_bool_value(radio_yes);
-        let radio_not = document.querySelector("#repeated_not");
-        set_bool_value(radio_not);
-        let letters_yes = document.querySelector("#letters_yes");
-        set_bool_value(letters_yes);
-        let numbers_yes = document.querySelector("#numbers_yes");
-        set_bool_value(numbers_yes);        
-        let symbols_yes = document.querySelector("#symbols_yes");
-        set_bool_value(symbols_yes);
-    }
-</script> -->
 </body>
 </html>

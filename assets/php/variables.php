@@ -17,3 +17,10 @@
         "numbers" => ['0','1','2','3','4','5','6','7','8','9'],
         "symbols" => ['!','?','#','$','%','&','@']
     ];
+
+    $some_error = -1;
+    $error_msgs = [
+        "I parametri selezionati consentono la generazione di una password come richiesto!",
+        "I parametri selezionati produrranno una password più corta di quanto richiesto!",
+        "I parametri selezionati non consentono la generazione di una password. Si prega di riformulare!"
+    ];
