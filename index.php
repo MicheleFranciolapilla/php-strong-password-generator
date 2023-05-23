@@ -34,7 +34,25 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Link a Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <style>
+        body
+        {
+            background-color: #001632;
+        }
+        main
+        {
+            width: 60%;
+            margin: 0 auto;
+        }
+        form
+        {
+            gap: 1.5rem;
+        }
+        .basis60
+        {
+            flex-basis: 60%;
+        }
+    </style>
     <title>Strong Password Generator</title>
 </head>
 <body>
@@ -43,11 +61,65 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
     </header>
     <main>
         <section id="form_section" class="mt-5">
-            <form action="index.php" method="GET">
-                <div class="my-3">
-                    <label for="psw_length_input" class="text-info me-2">Digita la lunghezza richiesta per la password...</label>
-                    <input id="psw_length_input" type="number" min="1" max="50" step="1" name="psw_length">
+            <form action="index.php" method="GET" class="d-flex flex-column rounded-3 py-5 bg-light">
+
+                <div id="length_area" class="d-flex justify-content-start px-5">
+                    <label for="psw_length_input" class="basis60 text-black-50 me-2">Digita la lunghezza (da 1 a 50 caratteri) della password...</label>
+                    <input id="psw_length_input" class="rounded-3" type="number" min="1" max="50" step="1" name="psw_length" required>
                 </div>
+
+                <div id="repeated_area" class="d-flex justify-content-start px-5">
+                    <span class="basis60 text-black-50 me-2">Consenti la ripetizione di caratteri?</span>
+                    <div id="radio_box" class="d-flex flex-column form-check">
+                        <div>
+                            <input id="repeated_yes" class="form-check-input" type="radio" name="allow_repeated"
+                                <?php
+                                    if (isset($_GET['allow_repeated']) && $allow_repeated) echo "checked";
+                                ?>
+                            value=true>
+                            <label for="repeated_yes" class="form-check-label">Sì, consento</label>
+                        </div>
+                        <div>
+                            <input id="repeated_not" class="form-check-input" type="radio" name="allow_repeated"
+                                <?php
+                                    if (isset($_GET['allow_repeated']) && !$allow_repeated) echo "checked";
+                                ?>
+                            value=false>
+                            <label for="repeated_not" class="form-check-label">Non consento</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="categories_area" class="d-flex justify-content-start px-5">
+                    <span class="basis60 text-black-50 me-2">Seleziona le categorie di caratteri da utilizzare...</span>
+                    <div id="check_box" class="d-flex flex-column form-check">
+                        <div>
+                            <input id="letters_yes" class="form-check-input" type="checkbox" name="allow_letters"
+                                <?php
+                                    if (isset($_GET['allow_letters']) && $allow_letters) echo "checked";
+                                ?>
+                            value=true>
+                            <label for="letters_yes" class="form-check-label">Lettere</label>
+                        </div>
+                        <div>
+                            <input id="numbers_yes" class="form-check-input" type="checkbox" name="allow_numbers"
+                                <?php
+                                    if (isset($_GET['allow_numbers']) && $allow_numbers) echo "checked";
+                                ?>
+                            value=true>
+                            <label for="numbers_yes" class="form-check-label">Numeri</label>
+                        </div>
+                        <div>
+                            <input id="symbols_yes" class="form-check-input" type="checkbox" name="allow_symbols"
+                                <?php
+                                    if (isset($_GET['allow_symbols']) && $allow_symbols) echo "checked";
+                                ?>
+                            value=true>
+                            <label for="symbols_yes" class="form-check-label">Simboli</label>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="btn btn-primary" type="submit">Conferma</button>
             </form>
         </section>
