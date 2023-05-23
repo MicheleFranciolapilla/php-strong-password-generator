@@ -10,7 +10,7 @@
 
     $psw_length = 0;
     $password = "";
-    
+
     // Array multidimensionale con tre sotto-array contenenti, nel complesso, la totalità dei caratteri validi per la composizione della password
     $char_set_array = [
         "letters" => ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],

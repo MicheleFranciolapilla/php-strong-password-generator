@@ -15,14 +15,20 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
 <?php
     // Si include il file functions.php
     include __DIR__ . '/assets/php/functions.php';
-    
-    // Creazione effettiva dell'array con i caratteri validi per la generazione della password
-    $valid_char_array = create_valid_char_array($parameters, $char_set_array);
+
+
 
     if (isset($_GET['psw_length']))
     {
         $psw_length = $_GET['psw_length'];
+        $allow_repeated = get_bool_value($_GET['allow_repeated']);
+        $parameters['letters'] = (isset($_GET['allow_letters']));
+        $parameters['numbers'] = (isset($_GET['allow_numbers']));
+        $parameters['symbols'] = (isset($_GET['allow_symbols']));
+        // Creazione effettiva dell'array con i caratteri validi per la generazione della password
+        $valid_char_array = create_valid_char_array($parameters, $char_set_array);
         $password = generate_psw($psw_length, $valid_char_array, $char_set_array["letters"], $allow_repeated);
+        var_dump($valid_char_array);
     }
 ?>
 
@@ -38,10 +44,11 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
         body
         {
             background-color: #001632;
+            /* background-color:green; */
         }
         main
         {
-            width: 60%;
+            width: 70%;
             margin: 0 auto;
         }
         form
@@ -65,26 +72,29 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
 
                 <div id="length_area" class="d-flex justify-content-start px-5">
                     <label for="psw_length_input" class="basis60 text-black-50 me-2">Digita la lunghezza (da 1 a 50 caratteri) della password...</label>
-                    <input id="psw_length_input" class="rounded-3" type="number" min="1" max="50" step="1" name="psw_length" required>
+                    <input id="psw_length_input" class="rounded-3" type="number" min="1" max="50" step="1" name="psw_length" required
+                    value="<?php if ($psw_length != 0) echo $psw_length; ?>">
                 </div>
 
                 <div id="repeated_area" class="d-flex justify-content-start px-5">
                     <span class="basis60 text-black-50 me-2">Consenti la ripetizione di caratteri?</span>
                     <div id="radio_box" class="d-flex flex-column form-check">
                         <div>
-                            <input id="repeated_yes" class="form-check-input" type="radio" name="allow_repeated"
+                            <input id="repeated_yes" class="form-check-input" type="radio" name="allow_repeated" value="true"
                                 <?php
-                                    if (isset($_GET['allow_repeated']) && $allow_repeated) echo "checked";
+                                    if  (($allow_repeated) || ($psw_length == 0))
+                                        echo "checked";
                                 ?>
-                            value=true>
+                            >
                             <label for="repeated_yes" class="form-check-label">Sì, consento</label>
                         </div>
                         <div>
-                            <input id="repeated_not" class="form-check-input" type="radio" name="allow_repeated"
+                            <input id="repeated_not" class="form-check-input" type="radio" name="allow_repeated" value="false"
                                 <?php
-                                    if (isset($_GET['allow_repeated']) && !$allow_repeated) echo "checked";
+                                    if  (!$allow_repeated)
+                                        echo "checked";
                                 ?>
-                            value=false>
+                            >
                             <label for="repeated_not" class="form-check-label">Non consento</label>
                         </div>
                     </div>
@@ -96,39 +106,41 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
                         <div>
                             <input id="letters_yes" class="form-check-input" type="checkbox" name="allow_letters"
                                 <?php
-                                    if (isset($_GET['allow_letters']) && $allow_letters) echo "checked";
+                                    if ($parameters['letters']) echo "checked";
                                 ?>
-                            value=true>
+                            value="true">
                             <label for="letters_yes" class="form-check-label">Lettere</label>
                         </div>
                         <div>
                             <input id="numbers_yes" class="form-check-input" type="checkbox" name="allow_numbers"
                                 <?php
-                                    if (isset($_GET['allow_numbers']) && $allow_numbers) echo "checked";
+                                    if ($parameters['numbers']) echo "checked";
                                 ?>
-                            value=true>
+                            value="true">
                             <label for="numbers_yes" class="form-check-label">Numeri</label>
                         </div>
                         <div>
                             <input id="symbols_yes" class="form-check-input" type="checkbox" name="allow_symbols"
                                 <?php
-                                    if (isset($_GET['allow_symbols']) && $allow_symbols) echo "checked";
+                                    if ($parameters['symbols']) echo "checked";
                                 ?>
-                            value=true>
+                            value="true">
                             <label for="symbols_yes" class="form-check-label">Simboli</label>
                         </div>
                     </div>
                 </div>
 
-                <button class="btn btn-primary" type="submit">Conferma</button>
+                <div class="mx-auto">
+                    <button class="btn btn-primary" type="submit">Conferma</button>
+                </div>
             </form>
         </section>
         <?php
             if (isset($_GET['psw_length'])) :
         ?>
-        <section id="output_section" class="my-5">
+        <section id="output_section" class="my-2 text-center rounded-3 py-5 bg-light">
             <?php
-                echo "<span>La password generata è la seguente: " . $password . "</span>";
+                echo "<h6>La password generata è la seguente: " . $password . "</h6>";
             ?>
         </section>
         <?php
@@ -141,5 +153,25 @@ Dare all’utente anche la possibilità di permettere o meno la ripetizione di c
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
+<!-- <script>
+    function set_bool_value(element)
+    {
+        (element.checked) ? (element.setAttribute("value","true")) : (element.setAttribute("value","false"));
+    }
+
+    function check_submit()
+    {
+        let radio_yes = document.querySelector("#repeated_yes");
+        set_bool_value(radio_yes);
+        let radio_not = document.querySelector("#repeated_not");
+        set_bool_value(radio_not);
+        let letters_yes = document.querySelector("#letters_yes");
+        set_bool_value(letters_yes);
+        let numbers_yes = document.querySelector("#numbers_yes");
+        set_bool_value(numbers_yes);        
+        let symbols_yes = document.querySelector("#symbols_yes");
+        set_bool_value(symbols_yes);
+    }
+</script> -->
 </body>
 </html>

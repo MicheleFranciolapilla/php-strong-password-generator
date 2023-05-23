@@ -18,7 +18,7 @@
             }
         }
         return $final_array;
-    }
+    };
 
     function generate_psw($password_length, $valid_char_array, $letters_array, $allow_repeated)
     {
@@ -46,3 +46,9 @@
         }
         return implode("",$psw_array);
     };
+
+    function get_bool_value($data)
+    {
+        return ($data == "true");
+    }
+    
