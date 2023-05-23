@@ -1,4 +1,6 @@
 <?php
+    // Si include il file variable.php
+    include_once __DIR__ . "/variables.php";
     // Funzione che crea l'array con gli effettivi caratteri validi con i quali comporre la password
     function create_valid_char_array($parameters, $char_set_array)
     {
